@@ -1,0 +1,102 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e8f5e9;
+    color: #388e3c;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #4caf50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 5px solid #2e7d32;
+}
+
+header h1 {
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1em;
+}
+
+select, button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button {
+    background-color: #81c784;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+button:hover:not(:disabled) {
+    background-color: #66bb6a;
+}
+
+button:disabled {
+    background-color: #ddd;
+    color: #999;
+    cursor: not-allowed;
+}
+
+main {
+    flex-grow: 1;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    background-color: white;
+    border: 3px solid #388e3c;
+    border-radius: 15px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.dog-photo {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+}
+
+#breed-name {
+    font-size: 1.8em;
+    color: #2e7d32;
+    margin-bottom: 10px;
+}
+
+#status-message {
+    font-style: italic;
+    color: #777;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto;
+}
