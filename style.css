@@ -12,7 +12,8 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh; 
+    overflow: hidden;    
     background-image: url('./img/licensed-image.jpg'); 
     background-repeat: repeat;
     background-size: 150px;
@@ -23,14 +24,15 @@ body {
 header {
     background-color: #8c6e5e;
     color: #fff8e1;
-    padding: 25px 20px;
+    padding: 12px 20px; 
     text-align: center;
     border-bottom: 5px solid #6b4d3d;
+    flex-shrink: 0; 
 }
 
 header h1 {
-    margin-bottom: 20px;
-    font-size: 2.5em;
+    margin: 0 0 8px;
+    font-size: 1.8em; 
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -103,13 +105,36 @@ main {
     max-width: 550px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
-    
     height: 650px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     z-index: 2;
+}
+
+#breed-details {
+    width: 100%;
+    text-align: left;
+    margin: 10px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #b7a497;
+    border-bottom: 1px dashed #b7a497;
+}
+
+#breed-details p {
+    margin: 3px 0;
+    color: #4a2c2a;
+}
+
+#breed-details p strong {
+    font-weight: bold;
+    display: inline-block;
+    min-width: 120px;
+}
+
+#temperament-info {
+    font-style: italic;
 }
 
 #image-container {
@@ -142,12 +167,6 @@ main {
     color: #4a2c2a;
     font-weight: bold;
     margin-bottom: 5px;
-}
-
-#status-message {
-    font-style: italic;
-    color: #777;
-    margin-top: 5px;
 }
 
 .sidebar {
@@ -194,16 +213,6 @@ main {
 
 #history-list li:hover {
     background-color: #ede0d4;
-}
-
-footer {
-    background-color: #4a2c2a;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: auto;
-    z-index: 1;
-    position: relative;
 }
 
 @media (max-width: 900px) {

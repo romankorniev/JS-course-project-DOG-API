@@ -3,19 +3,137 @@ const BREED_CACHE_KEY = 'dogBreedsDetailsCache';
 const HISTORY_CACHE_KEY = 'dogBreedHistory'; 
 const HISTORY_LIMIT = 5; 
 
+const TEMPERAMENT_MAP = {
+    "Affectionate": "Лагідний",
+    "Agile": "Спритний",
+    "Alert": "Пильний",
+    "Calm": "Спокійний",
+    "Cheerful": "Життєрадісний",
+    "Clever": "Кмітливий",
+    "Composed": "Врівноважений",
+    "Confident": "Впевнений",
+    "Courageous": "Сміливий",
+    "Curious": "Допитливий",
+    "Dedicated": "Відданий",
+    "Dutiful": "Сумлінний",
+    "Eager": "Завзятий",
+    "Energetic": "Енергійний",
+    "Friendly": "Дружній",
+    "Gentle": "Ніжний",
+    "Independent": "Незалежний",
+    "Intelligent": "Розумний",
+    "Loyal": "Відданий",
+    "Obedient": "Покірний",
+    "Playful": "Грайливий",
+    "Protective": "Захисний",
+    "Quick": "Швидкий",
+    "Reserved": "Стриманий",
+    "Sociable": "Товариський",
+    "Spunky": "Жвавий",
+    "Strong Willed": "Вольовий",
+    "Sweet-Tempered": "З доброю вдачею",
+    "Willful": "Свавільний",
+    "Aloof": "Байдужий",
+    "Steady": "Витривалий",
+    "Bold": "Відвижний",
+    "Dominant": "Панівний",
+    "Territorial": "Прив'язаний до території",
+    "Trainable": "Піддається навчанню",
+    "Good-natured": "Добродушний",
+    "Devoted": "Відданий",
+    "Lively": "Жвавий",
+    "Active": "Активний",
+    "Happy": "Життєрадісний",
+    "Stubborn": "Впертий",
+    "Adventurous": "Авантюрний",
+    "Fun-loving": "Люблячий розваги",
+    "Companionable": "Компанійський",
+    "Spirited": "Жвавий",
+    "Fearless": "Безстрашний",
+    "Tolerant": "Спокійний",
+    "Assertive": "Наполегливий",
+    "Gay": "Веселий",
+    "Quiet": "Тихий",
+    "Cooperative": "Готовий до співпраці",
+    "Tenacious": "Наполегливий",
+    "Attentive": "Уважний",
+    "Reliable": "Надійний",
+    "Mischievous": "Грайливий",
+    "People-Oriented": "Орієнтований на людей",
+    "Charming": "Чарівний",
+    "Keen": "Проникливий",
+    "Faithful": "Вірний",
+    "Sturdy": "Кріпкий",
+    "Bright": "Розумний",
+    "Docile": "Покірний",
+    "Self-important": "Самовпевнений",
+    "Sensitive": "Чутливий",
+    "Watchful": "Пильний",
+    "Inquisitive": "Допитливий",
+    "Cunning": "Хитрий",
+    "Extroverted": "Екстравертний",
+    "Amiable": "Приязний",
+    "Even Tempered": "Спокійний",
+    "Excitable": "Збудливий",
+    "Determined": "Визначений",
+    "Athletic": "Атлетичний",
+    "Opinionated": "Впевнений у своїй думці",
+    "Aggressive": "Агресивний",
+    "Dignified": "Гідний",
+    "Patient": "Терплячий",
+    "Thoughtful": "Задумливий",
+    "Loving": "Люблячий",
+    "Familial": "Сімейний",
+    "Outgoing": "Комунікабельний",
+    "Great-hearted": "Великодушний",
+    "Hard-working": "Працьовитий",
+    "Powerful": "Потужний",
+    "Fast": "Швидкий",
+    'Benevolent': "Доброзичливий",
+    
+};
+
 const randomBtn = document.getElementById('random-btn'); 
 const breedBtn = document.getElementById('breed-btn');
 const breedSelect = document.getElementById('breed-select');
 const dogImage = document.getElementById('dog-image');
 const breedNameH2 = document.getElementById('breed-name');
-const statusMessageP = document.getElementById('status-message');
 const lastBreedInfo = document.getElementById('last-breed-info');
 const originInfoP = document.getElementById('origin-info');
 const historyListUL = document.getElementById('history-list'); 
 
+const weightInfoP = document.getElementById('weight-info');
+const lifeSpanInfoP = document.getElementById('life-span-info');
+const temperamentInfoP = document.getElementById('temperament-info');
+
 let allBreedsData = {};
 
+function translateTemperament(englishTemperament) {
+    if (!englishTemperament) {
+        return 'Не визначено';
+    }
+    
+    const terms = englishTemperament.split(', ').map(term => term.trim());
+    const translatedTerms = terms.map(term => TEMPERAMENT_MAP[term] || term);
+    
+    return translatedTerms.join(', ');
+}
+
+function resetDogInfo(message) {
+    if (breedNameH2) breedNameH2.textContent = message;
+    if (originInfoP) {
+        originInfoP.textContent = '';
+        originInfoP.style.display = 'none';
+    }
+    if (dogImage) dogImage.src = '';
+    if (weightInfoP) weightInfoP.textContent = 'Вага: N/A';
+    if (lifeSpanInfoP) lifeSpanInfoP.textContent = 'Тривалість життя: N/A';
+    if (temperamentInfoP) temperamentInfoP.textContent = 'Темперамент: N/A';
+}
+
 function formatBreedsToOptions(breeds) {
+    if (!breedSelect) return;
+    
     breedSelect.innerHTML = '<option value="">Оберіть породу...</option>';
     const validBreeds = breeds.filter(b => b.id); 
     
@@ -34,7 +152,7 @@ async function populateBreeds() {
     if (cachedData) {
         allBreedsData = JSON.parse(cachedData);
         formatBreedsToOptions(Object.values(allBreedsData));
-        breedBtn.disabled = false;
+        if (breedBtn) breedBtn.disabled = false;
         loadLastBreed();
         
         const lastBreed = localStorage.getItem('lastDogBreed');
@@ -45,6 +163,7 @@ async function populateBreeds() {
     }
 
     const url = `${API_BASE_URL}breeds`;
+    if (breedSelect) breedSelect.innerHTML = '<option value="">Завантаження порід...</option>';
     
     try {
         const response = await fetch(url);
@@ -56,9 +175,8 @@ async function populateBreeds() {
         const breeds = await response.json();
         formatBreedsToOptions(breeds);
         localStorage.setItem(BREED_CACHE_KEY, JSON.stringify(allBreedsData));
-        breedBtn.disabled = false;
+        if (breedBtn) breedBtn.disabled = false;
         loadLastBreed();
-        statusMessageP.textContent = 'Список порід завантажено успішно. Оберіть породу.';
         
         const lastBreed = localStorage.getItem('lastDogBreed');
         if (lastBreed) {
@@ -66,17 +184,18 @@ async function populateBreeds() {
         }
         
     } catch (error) {
-        breedSelect.innerHTML = '<option value="">Помилка завантаження The Dog API</option>';
-        statusMessageP.textContent = `Помилка: ${error.message}`;
-        breedBtn.disabled = true;
+        if (breedSelect) breedSelect.innerHTML = '<option value="">Помилка завантаження API</option>';
+        resetDogInfo(`Помилка: ${error.message}`);
+        if (breedBtn) breedBtn.disabled = true;
     }
 }
 
 async function fetchDogPhoto(breedName) {
     let breedDetail;
     
-    breedBtn.disabled = true;
-    randomBtn.disabled = true;
+    if (breedBtn) breedBtn.disabled = true;
+    if (randomBtn) randomBtn.disabled = true;
+    if (breedNameH2) breedNameH2.textContent = `Завантаження даних для породи ${breedName}...`;
     
     try {
         breedDetail = allBreedsData[breedName];
@@ -100,39 +219,52 @@ async function fetchDogPhoto(breedName) {
         }
 
         const nameToDisplay = breedDetail.name || 'Невідома порода';
-        const originToDisplay = breedDetail.origin || 'Інформація про походження відсутня';
+        const originToDisplay = breedDetail.origin;
         
-        breedNameH2.textContent = `Порода: ${nameToDisplay}`;
-        dogImage.src = breedDetail.image.url;
-        dogImage.alt = `Фото собаки породи ${nameToDisplay}`;
+        const weight = breedDetail.weight ? `${breedDetail.weight.metric} кг` : 'N/A';
+        const lifeSpan = breedDetail.life_span || 'N/A';
+        const englishTemperament = breedDetail.temperament;
+        
+        const translatedTemperament = translateTemperament(englishTemperament);
+        
+        if (weightInfoP) weightInfoP.textContent = `Вага: ${weight}`;
+        if (lifeSpanInfoP) lifeSpanInfoP.textContent = `Тривалість життя: ${lifeSpan}`;
+        if (temperamentInfoP) temperamentInfoP.textContent = `Темперамент: ${translatedTemperament}`;
+        
+        if (breedNameH2) breedNameH2.textContent = `${nameToDisplay}`;
+        
+        if (dogImage) {
+            dogImage.src = breedDetail.image.url;
+            dogImage.alt = `Фото собаки породи ${nameToDisplay}`;
+        }
         
         if (originInfoP) {
-            originInfoP.textContent = `Походження: ${originToDisplay}`;
+            if (originToDisplay) {
+                originInfoP.textContent = `Походження: ${originToDisplay}`;
+                originInfoP.style.display = 'block';
+            } else {
+                originInfoP.textContent = '';
+                originInfoP.style.display = 'none';
+            }
         }
         
         saveLastBreed(nameToDisplay);
 
     } catch (error) {
-        breedNameH2.textContent = 'Помилка завантаження фото/деталей 😔';
-        statusMessageP.textContent = `Помилка: ${error.message}`;
+        resetDogInfo(`Помилка завантаження фото/деталей: ${error.message} 😔`);
         
-        dogImage.src = '';
-        
-        if (originInfoP) {
-             originInfoP.textContent = '';
-        }
     } finally {
         if (Object.keys(allBreedsData).length > 0) {
-            breedBtn.disabled = false;
-            randomBtn.disabled = false;
+            if (breedBtn) breedBtn.disabled = false;
+            if (randomBtn) randomBtn.disabled = false;
         }
     }
 }
 
 async function fetchRandomDogPhoto() {
-    breedBtn.disabled = true;
-    randomBtn.disabled = true;
-    statusMessageP.textContent = `Випадковий вибір породи...`;
+    if (breedBtn) breedBtn.disabled = true;
+    if (randomBtn) randomBtn.disabled = true;
+    if (breedNameH2) breedNameH2.textContent = `Випадковий вибір породи...`;
     
     try {
         const breedNames = Object.keys(allBreedsData);
@@ -144,17 +276,14 @@ async function fetchRandomDogPhoto() {
         const randomIndex = Math.floor(Math.random() * breedNames.length);
         const randomBreedName = breedNames[randomIndex];
         
-        breedSelect.value = randomBreedName;
+        if (breedSelect) breedSelect.value = randomBreedName;
         
         await fetchDogPhoto(randomBreedName); 
         
     } catch (error) {
-        breedNameH2.textContent = 'Помилка завантаження випадкового фото 😔';
-        statusMessageP.textContent = `Помилка: ${error.message}`;
-        dogImage.src = '';
-        originInfoP.textContent = '';
-        breedBtn.disabled = false;
-        randomBtn.disabled = false;
+        resetDogInfo(`Помилка завантаження випадкового фото: ${error.message} 😔`);
+        if (breedBtn) breedBtn.disabled = false;
+        if (randomBtn) randomBtn.disabled = false;
     }
 }
 
@@ -202,9 +331,9 @@ function loadLastBreed() {
     const lastTimeDate = localStorage.getItem('lastDogTimeDate');
 
     if (lastBreed) {
-        lastBreedInfo.innerHTML = `Порода: **${lastBreed}**<br>Час та Дата: ${lastTimeDate}`;
+        if (lastBreedInfo) lastBreedInfo.innerHTML = `Порода: **${lastBreed}**<br>Час та Дата: ${lastTimeDate}`;
     } else {
-        lastBreedInfo.textContent = 'Ще не було збережено жодної породи.';
+        if (lastBreedInfo) lastBreedInfo.textContent = 'Ще не було збережено жодної породи.';
     }
     
     renderBreedHistory();
@@ -212,20 +341,21 @@ function loadLastBreed() {
 
 function renderBreedHistory() {
     const history = getBreedHistory();
+    if (!historyListUL) return; 
+    
     historyListUL.innerHTML = '';
     
-    if (history.length <= 1) {
+    if (history.length === 0) {
         historyListUL.innerHTML = '<li>Історія порожня.</li>';
         return;
     }
     
-    for (let i = 1; i < history.length; i++) {
-        const breed = history[i];
+    for (const breed of history) {
         const li = document.createElement('li');
         li.textContent = breed;
         
         li.addEventListener('click', () => {
-            breedSelect.value = breed;
+            if (breedSelect) breedSelect.value = breed;
             fetchDogPhoto(breed);
         });
         
@@ -233,20 +363,21 @@ function renderBreedHistory() {
     }
 }
 
+if (randomBtn) {
+    randomBtn.addEventListener('click', fetchRandomDogPhoto);
+}
 
-randomBtn.addEventListener('click', fetchRandomDogPhoto);
-
-
-breedBtn.addEventListener('click', () => {
-    const breed = breedSelect.value;
-    if (breed && breed !== '') { 
-        fetchDogPhoto(breed);
-    } else {
-        statusMessageP.textContent = 'Будь ласка, оберіть породу зі списку.';
-    }
-});
+if (breedBtn) {
+    breedBtn.addEventListener('click', () => {
+        const breed = breedSelect.value;
+        if (breed && breed !== '') { 
+            fetchDogPhoto(breed);
+        } else {
+            resetDogInfo('Будь ласка, оберіть породу зі списку.');
+        }
+    });
+}
 
 window.addEventListener('load', () => {
-    localStorage.removeItem('ceoToDogApiMap'); 
     populateBreeds();
 });

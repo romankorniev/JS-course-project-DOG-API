@@ -13,7 +13,7 @@
             <button id="random-btn">Випадковий Песик</button>
             <label for="breed-select">Обрати Породу:</label>
             <select id="breed-select">
-                <option value="">Завантаження порід...</option> 
+                <option value="">Оберіть породу...</option> 
             </select>
             <button id="breed-btn" disabled>Показати Породу</button>
         </div>
@@ -22,9 +22,15 @@
     <div class="content-wrapper">
         <main>
             <div id="dog-card" class="card">
-                <h2 id="breed-name">Очікування завантаження списку</h2>
+                <h2 id="breed-name">Оберіть породу або натисніть "Випадковий Песик"</h2>
                 
                 <p id="origin-info"></p>
+                
+                <div id="breed-details">
+                    <p id="weight-info">Вага:</p>
+                    <p id="life-span-info">Тривалість життя:</p>
+                    <p id="temperament-info">Темперамент:</p>
+                </div>
                 
                 <div id="image-container">
                     <img id="dog-image" src="" alt="Фото собаки" class="dog-photo">
@@ -36,12 +42,13 @@
             <h3>Попередня Порода</h3>
             <p id="last-breed-info">Ще не було збережено жодної породи.</p>
             
-            <h3>Історія Переглядів (Топ-5)</h3>
+            <h3>Історія Переглядів</h3>
             <ul id="history-list">
                 <li>Історія порожня.</li>
             </ul>
         </aside>
     </div>
+    
     <script src="./js/main.js"></script>
 </body>
 </html>
