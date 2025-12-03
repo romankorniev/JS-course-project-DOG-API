@@ -13,8 +13,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-
-    background-image: url('./img/licensed-image.jpg');
+    background-image: url('./img/licensed-image.jpg'); 
     background-repeat: repeat;
     background-size: 150px;
     animation: pawPrintWalk 60s linear infinite;
@@ -76,14 +75,23 @@ button:disabled {
     cursor: not-allowed;
 }
 
-main {
-    flex-grow: 1;
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
     padding: 30px;
+    max-width: 1200px; 
+    margin: 0 auto;
+    flex-grow: 1;
+    gap: 30px; 
+}
+
+main {
+    padding: 0; 
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
-    position: relative;
 }
 
 .card {
@@ -95,6 +103,7 @@ main {
     max-width: 550px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
+    
     height: 650px;
     display: flex;
     flex-direction: column;
@@ -116,6 +125,7 @@ main {
 .dog-photo {
     width: 100%;
     height: 100%;
+    object-fit: contain; 
     border-radius: 0;
     margin: 0;
 }
@@ -126,6 +136,7 @@ main {
     margin: 10px 0 5px;
     font-weight: 900;
 }
+
 #origin-info {
     font-size: 1.1em;
     color: #4a2c2a;
@@ -139,6 +150,52 @@ main {
     margin-top: 5px;
 }
 
+.sidebar {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 5px solid #6b4d3d;
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px; 
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    align-self: flex-start; 
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    color: #8c6e5e;
+    border-bottom: 2px solid #e0d9d4;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+#last-breed-info {
+    font-weight: bold;
+    color: #4a2c2a;
+    font-style: italic;
+    margin-bottom: 25px;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#history-list li {
+    background-color: #f7f0e8;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    color: #5a4a40;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#history-list li:hover {
+    background-color: #ede0d4;
+}
+
 footer {
     background-color: #4a2c2a;
     color: white;
@@ -147,48 +204,6 @@ footer {
     margin-top: auto;
     z-index: 1;
     position: relative;
-}
-
-.content-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 30px;
-    max-width: 1200px; 
-    margin: 0 auto;
-    flex-grow: 1;
-    gap: 30px
-}
-
-main {
-    padding: 0; 
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.sidebar {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 5px solid #6b4d3d;
-    border-radius: 15px;
-    padding: 20px;
-    width: 250px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    align-self: flex-start
-}
-
-.sidebar h3 {
-    margin-top: 0;
-    color: #8c6e5e;
-    border-bottom: 2px solid #e0d9d4;
-    padding-bottom: 5px;
-}
-
-#last-breed-info {
-    font-weight: bold;
-    color: #4a2c2a;
-    font-style: italic;
 }
 
 @media (max-width: 900px) {
