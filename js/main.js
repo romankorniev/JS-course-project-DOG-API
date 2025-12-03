@@ -1,4 +1,5 @@
 const API_BASE_URL = 'https://dog.ceo/api/';
+const BREED_CACHE_KEY = 'dogBreedsCache';
 
 const randomBtn = document.getElementById('random-btn');
 const breedBtn = document.getElementById('breed-btn');
@@ -8,44 +9,61 @@ const breedNameH2 = document.getElementById('breed-name');
 const statusMessageP = document.getElementById('status-message');
 const lastBreedInfo = document.getElementById('last-breed-info');
 
-async function populateBreeds() {
-    const url = `${API_BASE_URL}breeds/list/all`;
-    breedSelect.innerHTML = '<option value="random">Завантаження порід...</option>';
+function formatBreedsToOptions(breeds) {
+    breedSelect.innerHTML = '<option value="random">Випадкова порода</option>';
 
+    for (const [mainBreed, subBreeds] of Object.entries(breeds)) {
+        const formattedMainBreed = mainBreed.charAt(0).toUpperCase() + mainBreed.slice(1);
+        
+        const option = document.createElement('option');
+        option.value = mainBreed;
+        option.textContent = formattedMainBreed;
+        breedSelect.appendChild(option);
+        
+        if (subBreeds.length > 0) {
+            subBreeds.forEach(subBreed => {
+                const fullBreed = `${mainBreed}/${subBreed}`;
+                const formattedSubBreed = `${subBreed.charAt(0).toUpperCase() + subBreed.slice(1)} ${formattedMainBreed}`;
+                
+                const subOption = document.createElement('option');
+                subOption.value = fullBreed;
+                subOption.textContent = formattedSubBreed;
+                breedSelect.appendChild(subOption);
+            });
+        }
+    }
+}
+
+async function populateBreeds() {
+    const cachedData = localStorage.getItem(BREED_CACHE_KEY);
+    
+    if (cachedData) {
+        const breeds = JSON.parse(cachedData);
+        formatBreedsToOptions(breeds);
+        breedBtn.disabled = false;
+        loadLastBreed();
+        statusMessageP.textContent = 'Список порід завантажено з кешу.';
+        return; 
+    }
+
+    const url = `${API_BASE_URL}breeds/list/all`;
+    breedSelect.innerHTML = '<option value="random">Завантаження порід з API...</option>';
+    
     try {
         const response = await fetch(url);
         const data = await response.json();
         
         if (data.status !== 'success') {
-            throw new Error('Не вдалося завантажити список порід.');
+            throw new Error(`Помилка HTTP: ${response.status}`);
         }
 
         const breeds = data.message;
-        breedSelect.innerHTML = '<option value="random">Випадкова порода</option>';
-        
-        for (const [mainBreed, subBreeds] of Object.entries(breeds)) {
-            const formattedBreed = mainBreed.charAt(0).toUpperCase() + mainBreed.slice(1);
-            
-            const option = document.createElement('option');
-            option.value = mainBreed;
-            option.textContent = formattedBreed;
-            breedSelect.appendChild(option);
-            
-            if (subBreeds.length > 0) {
-                subBreeds.forEach(subBreed => {
-                    const fullBreed = `${mainBreed}/${subBreed}`;
-                    const formattedSubBreed = `${subBreed.charAt(0).toUpperCase() + subBreed.slice(1)} ${formattedBreed}`;
-                    
-                    const subOption = document.createElement('option');
-                    subOption.value = fullBreed;
-                    subOption.textContent = formattedSubBreed;
-                    breedSelect.appendChild(subOption);
-                });
-            }
-        }
-        
+        localStorage.setItem(BREED_CACHE_KEY, JSON.stringify(breeds));
+
+        formatBreedsToOptions(breeds);
         breedBtn.disabled = false;
         loadLastBreed();
+        statusMessageP.textContent = 'Список порід завантажено з API.';
         
     } catch (error) {
         breedSelect.innerHTML = '<option value="random">Помилка завантаження</option>';
