@@ -148,3 +148,58 @@ footer {
     z-index: 1;
     position: relative;
 }
+
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px;
+    max-width: 1200px; 
+    margin: 0 auto;
+    flex-grow: 1;
+    gap: 30px
+}
+
+main {
+    padding: 0; 
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 5px solid #6b4d3d;
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    align-self: flex-start
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    color: #8c6e5e;
+    border-bottom: 2px solid #e0d9d4;
+    padding-bottom: 5px;
+}
+
+#last-breed-info {
+    font-weight: bold;
+    color: #4a2c2a;
+    font-style: italic;
+}
+
+@media (max-width: 900px) {
+    .content-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .sidebar {
+        width: 90%;
+        max-width: 550px;
+        margin-top: 0;
+    }
+}
