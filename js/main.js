@@ -45,7 +45,6 @@ async function populateBreeds() {
     }
 
     const url = `${API_BASE_URL}breeds`;
-    breedSelect.innerHTML = '<option value="">Завантаження порід з The Dog API...</option>';
     
     try {
         const response = await fetch(url);
